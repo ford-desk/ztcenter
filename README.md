@@ -20,5 +20,7 @@ These are some included features meant to enrich user experience:
 ## Contributing
 While this project is dormant, any code suggestions are welcomed.
 
-## License (CC-BY-SA-4.0)
-You may use code or content from this project, but please see the references information panel and use proper citations. The citations for the spheremap and solar panel images are included as [13] and [14].
+## License
+This program relies on a framework for building browser based 3D, AR and VR experiences developed by A-Frame authors. Their framework is under an [MIT License](LICENSE-MIT).
+To use and cite information and media content, please see the references information panel. The citations for the spheremap and solar panel images are included as [13] and [14].
+The rest of the work is licensed under [Creative Commons Zero v1.0 Universal](LICENSE-CC0).
