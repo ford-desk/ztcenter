@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<!--To God be the glory!-->
+<html lang="en-us">
+  <head>
+	<title>Zero Trust Center</title>
+    <meta name="description" content="Learn about the cybersecurity concept of zero trust architecture and enjoy an engaging 3D experience.">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,maximum-scale=1,shrink-to-fit=no,minimal-ui,viewport-fit=cover">
+    <link rel="icon" type="image/x-icon" href="media/favicon.png">
+    <script src="/scripts/aframe.min.js"></script>
+    <script src="/scripts/challengeQuestionUI.js"></script>
+    <script>
+        //current total includes solarPanel.jpg and space.jpg
+        const totalBytes = 461854;
+        var assetBytes = [303506, 158348];
+        var totalBytesLoaded = 0;
+
+        function updateProgress(assetNum) {
+            totalBytesLoaded += assetBytes[assetNum];
+            document.getElementById("progress").innerHTML = Math.round((totalBytesLoaded/totalBytes)*100) + "%";
+        }
+
+        var zoom = 1;
+
+        function changeZoom(factor) {
+            zoom *= factor;
+            if (zoom < 0.5) {
+                zoom = 0.5;
+            }
+            var camera = document.querySelector("#camera");
+            camera.setAttribute("zoom", zoom);
+        }
+
+        //-1 equals the welcome panel, 0 panel 0, etc.
+        var currentPanel = -1;
+        var radius = 11;
+
+        function moveCamera() {
+            var camera = document.querySelector("#camera");
+            var cameraYaw;
+            var cameraPitch;
+            var cameraX;
+            var cameraZ;
+
+            if(currentPanel != -1) {
+                cameraYaw = (150 - currentPanel * 20) / 180 * Math.PI;
+                //or adjust to 0.12 pitch to zoom in on panels
+                cameraPitch = 0;
+                cameraX = Math.sin(-cameraYaw) * radius;
+                cameraZ = -Math.cos(-cameraYaw) * radius;
+            }
+            else {
+                cameraYaw = 0;
+                cameraPitch = 0;
+                cameraX = 0;
+                cameraZ = 3;
+            }
+
+            camera.object3D.position.set(cameraX, 1.9, cameraZ);
+
+            camera.components['look-controls'].pitchObject.rotation.set(cameraPitch,0,0);
+            camera.components['look-controls'].yawObject.rotation.set(0, cameraYaw, 0);
+        }
+
+        function previousPanel() {
+            currentPanel--;
+            if(currentPanel < -1) {
+                currentPanel = 15;
+            }
+            moveCamera();
+        }
+
+        function nextPanel() {
+            currentPanel++;
+            if(currentPanel > 15) {
+                currentPanel = -1;
+            }
+            moveCamera();
+        }
+    </script>
+    <style>
+        .hiddenAccessibleText {
+            width: 100vw;
+            position: absolute;
+            top:0;
+            left:0;
+            padding: 100vw 0;
+        }
+        #navControls {
+            position: absolute;
+            padding: 10px;
+            bottom: 0;
+            z-index: 2;
+        }
+        .zoomControl1 {
+            position: absolute;
+            margin-right: 85px;
+            margin-bottom: 20px;
+            bottom: 0;
+            right: 0;
+        }
+        .zoomControl2 {
+            position: absolute;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            bottom: 0;
+            right: 0;
+        }
+        .navButton {
+            background-color: #0004;
+            margin: 10px;
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border-style: solid;
+            border-color: white;
+            color: white;
+            font-size: 23px;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+        }
+        .navButton:hover {
+            background-color: #0008;
+        }
+    </style>
+  </head>
+  <body style="background: black;">
+<div style="color: white; width: 100vw; position: absolute; top:0; left:0; text-align: center; padding: 45vh 0; font-size: 20px">Loading experience... <span id="progress"></span></div>
+
+    <div id="navControls">
+        <button class="navButton" style="margin-right: 5px;" aria-label="previous info panel" onclick="previousPanel()">◀</button>
+        <button class="navButton" style="margin-left: 5px;" aria-label="next info panel" onclick="nextPanel()">▶</button>
+    </div>
+
+    <div class="zoomControl1" style="backdrop-filter: blur(10px); border-radius: 10px; width: 50px; height: 50px; z-index: 2;"></div>
+    <svg class="zoomControl1" width="53" height="53" viewBox="-1 -1 52 52" style="z-index: 3;" aria-label="zoom out" role="button" tabindex="0" onclick="changeZoom(0.8)"><path id="buttonShape" style="stroke: white; stroke-width: 2; fill: #0004; stroke-linejoin: round; cursor: pointer;" onmouseover="this.style.fill='#0008'" onmouseleave="this.style.fill='#0004'" d=" M 0 10 A 10 10 180 0 1 10 0 L 40 0 A 10 10 270 0 1 50 10 L 50 40 A 10 10 0 0 1 40 50 L 10 50 A 10 10 90 0 1 0 40 Z"></path><line x1="12.5" y1="25" x2="37.5" y2="25" style="stroke: white; stroke-width: 3; cursor: pointer;" onmouseover="document.getElementById('buttonShape').style.fill='#0008'" onmouseleave="document.getElementById('buttonShape').style.fill='#0004'"></line></svg>
+
+    <div class="zoomControl2" style="backdrop-filter: blur(10px); border-radius: 10px; width: 50px; height: 50px; z-index: 2;"></div>
+    <svg class="zoomControl2" width="53" height="53" viewBox="-1 -1 52 52" style="z-index: 3;" aria-label="zoom in" role="button" tabindex="0" onclick="changeZoom(1.25)"><path id="buttonShape2" style="stroke: white; stroke-width: 2; fill: #0004; stroke-linejoin: round; cursor: pointer;" onmouseover="this.style.fill='#0008'" onmouseleave="this.style.fill='#0004'" d=" M 0 10 A 10 10 180 0 1 10 0 L 40 0 A 10 10 270 0 1 50 10 L 50 40 A 10 10 0 0 1 40 50 L 10 50 A 10 10 90 0 1 0 40 Z"></path><line x1="25" y1="12.5" x2="25" y2="37.5" style="stroke: white; stroke-width: 3; cursor: pointer;" onmouseover="document.getElementById('buttonShape2').style.fill='#0008'" onmouseleave="document.getElementById('buttonShape2').style.fill='#0004'"></line><line x1="12.5" y1="25" x2="37.5" y2="25" style="stroke: white; stroke-width: 3; cursor: pointer;" onmouseover="document.getElementById('buttonShape2').style.fill='#0008'" onmouseleave="document.getElementById('buttonShape2').style.fill='#0004'"></line></svg>
+
+<a-scene light="defaultLightsEnabled: false" background="color: black;" renderer="logarithmicDepthBuffer: true;" style="z-index: 1;" xr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" keyboard-shortcuts="enterVR: false; exitVR: false" raycaster='objects: [data-clickable]' cursor="rayOrigin: mouse; fuse: false">
+ <a-assets>
+    <img id="sky" src="media/space.jpg" onload="updateProgress(0);" onerror="alert('Loading error! Reload to see missing picures.');" crossorigin="anonymous">
+    <img id="solarPanel" src="media/solarPanel.jpg" onload="updateProgress(1);" crossorigin="anonymous">
+
+    <a-mixin id="pillars" position="-5.78233 2.11686 16.22439" rotation="0 -20 0" scale="1 4.3 0.5" material="shader: flat; color: #404040"></a-mixin>
+    <a-mixin id="panelText" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" scale="1.25 1.25 1.25">
+    <a-mixin id="sphereCitation" position="0 0 -200" material="opacity: 0.9; shader: phong" rotation="0 180 0" text="align: center; color: #000; value: Artificial Planet Close. From [14], CC BY 4.0; width: 10.03" geometry="height: 3; width: 10"></a-mixin>
+  </a-assets>
+
+  <a-sky src="#sky"></a-sky>
+
+<a-camera id="camera" position="0 1.9 3" wasd-controls="" rotation="" look-controls="" aframe-injected="" data-aframe-inspector-original-camera="" rotation-reader></a-camera>
+
+<a-light light="color: #c5dde2; type: ambient" data-aframe-default-light="" aframe-injected=""></a-light>
+
+<a-light light="color: #e2e0c5; intensity: 6.28; castShadow: true" data-aframe-default-light="" aframe-injected="" position="0 0 45" id="sun"></a-light>
+
+<a-box id="sunGuard" scale="2.8 3 0.5" position="0 2 4.75" shadow="receive: false" material="shader: sdf; transparent: true"></a-box>
+
+<a-entity id="satelliteBody">
+<a-cylinder position="0 3.75 0" radius="0.5" height="1.5" material="shader: flat; side: double; color: #9e8a67; shininess: 0" geometry="openEnded: true; segmentsHeight: 1; segmentsRadial: 150" scale="35 5 35" id="insideWall"></a-cylinder>
+
+<a-cylinder position="0 3.75 0" radius="0.5" height="1.5" material="side: double; color: #545454" geometry="openEnded: true; segmentsRadial: 150; segmentsHeight: 1;" scale="36 5 36" id="outsideWall"></a-cylinder>
+
+<a-box material="color: #949494; metalness: 0.5" position="0 1.71 17.70842" scale="2.26 3.41 1.17319" id="door"></a-box>
+
+<a-circle geometry="radius: 18; segments: 150" material="side: double; color: #858585" rotation="90 0 0" id="floor"></a-circle>
+
+<a-circle geometry="radius: 18; segments: 150" material="opacity: 0.5; side: double" rotation="90 0 0" id="ceiling" position="0 7.5 0"></a-circle>
+</a-entity>
+
+<a-entity id="centerPiece" position="0 0.3 0" class="hiddenAccessibleText">
+<a-plane position="0 1.61488 0" material="shader: flat; side: double; color: #000" geometry="height: 1.5; width: 1.5" scale="1.15 0.75 1" id="textBackground" class=""></a-plane>
+
+<a-plane position="0 1.87 0" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #ffea00; font: monoid; height: 1.72; side: double; value: Zero Trust Center; width: 2.92" scale="1.25 1.25 1.25" id="centerText">Zero Trust Center</a-plane>
+
+<a-plane position="0 1.5506 0" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; height: 1.72; side: double; value: Use the navigation arrows or keyboard to explore!; width: 0.95; wrapCount: 22" scale="1.25 1.25 1.25" id="centerText2">Use the navigation arrows or keyboard to explore!</a-plane>
+
+<a-plane position="0 1.27387 0.00137" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; height: 1.72; side: double; value: Use the mouse or touchscreen to look around and answer quiz questions.; width: 0.95; wrapCount: 24.14" scale="1.25 1.25 1.25" id="centerText3">Use the mouse or touchscreen to look around and answer quiz questions.</a-plane>
+
+<a-box position="0 1.727 0" scale="1.25 1.25 0.14" material="opacity: 0.25; shader: phong; side: double; color: #7ac7b0; specular: #ffffff; shininess: 1" geometry="height: 1.5; width: 1.5" id="centerGlass" shadow="cast: false"></a-box>
+
+<a-entity light="color: #c5dde2; decay: 0.2; distance: 3.25; intensity: 12; penumbra: 1; type: spot" data-aframe-default-light="" aframe-injected="" position="-0.68 0.66 0.37" rotation="75 -72 175" id="centerSpot1"></a-entity>
+
+<a-entity light="color: #c5dde2; decay: 0.2; distance: 3.25; intensity: 12; penumbra: 1; type: spot" data-aframe-default-light="" aframe-injected="" position="0.67 0.67 0.37" rotation="75 67 175" id="centerSpot2"></a-entity>
+
+<a-entity geometry="width: 1.5" material="shader: phong; color: #4b3f1b;" scale="1.25 0.8 0.35214" position="0 0.379 0" id="centerBase"></a-entity>
+
+<a-entity geometry="width: 1.5" material="shader: phong; color: #4b3f1b; shininess: 0" scale="1.25 1.95 0.102" position="0 1.71391 -0.12625" id="centerBack"></a-entity>
+
+<a-entity geometry="width: 1.5" material="shader: phong; color: #4b3f1b;" scale="1.25 0.17314 0.35214" position="0 2.75149 0" id="centerCap"></a-entity>
+
+<a-entity geometry="width: 1.5" material="color: #fffed6; emissive: #fffed6" scale="0.27361 0.00051 0.02277" position="-0.631 0.78604 0.14821" id="centerLightStrip1"></a-entity>
+
+<a-entity geometry="width: 1.5" material="color: #fffed6; emissive: #fffed6" scale="0.27361 0.00051 0.02277" position="0.63315 0.78604 0.14821" id="centerLightStrip2"></a-entity>
+
+<a-entity geometry="width: 1.5" material="shader: phong; color: #4a4a4a; shininess: 0" scale="0.31999 1.22667 0.5557" position="-1.18094 0.61661 0" id="centerPillar1"></a-entity>
+
+<a-entity geometry="width: 1.5" material="shader: phong; color: #4a4a4a; shininess: 0" scale="0.31999 1.72249 0.5557" position="1.1765 0.85298 0" id="centerPillar2"></a-entity>
+
+<a-cylinder geometry="height: 0.15; radius: 10; segmentsHeight: 1; segmentsRadial: 70" position="0 -0.21 0" material="color: #8c856e;" id="elevatedPlatform1" ></a-cylinder>
+
+<a-cylinder geometry="height: 0.15; radius: 7.5; segmentsHeight: 1; segmentsRadial: 70" position="0 -0.05 0" material="shader: phong; color: #dedede" id="elevatedPlatform2"></a-cylinder>
+
+</a-entity>
+
+<a-entity id="outerPanels" class="hiddenAccessibleText">
+<a-cone geometry="openEnded: true; radiusBottom: 17.5; radiusTop: 17; segmentsHeight: 1; segmentsRadial: 150" position="0 4.5 0" material="shader: flat; side: back; color: #161a2d" scale="1 0.5 1" id="roof"></a-cone>
+
+<a-entity id="pillar0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.55968 3.701 14.94375" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 0; width: 3.35" scale="1.25 1.25 1.25" id="sec0panelNum" rotation="0 150 0">Panel 0</a-plane>
+<a-plane position="-8.50905 3.3 14.85606" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: Zero Trust Architecture; width: 5.66" scale="1.25 1.25 1.25" id="sec0text1" rotation="0 150 0">Zero Trust Architecture Starts Here</a-plane>
+<a-plane position="-8.55412 2.75 14.88674" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: Starts Here; width: 8.51" scale="1.25 1.25 1.25" id="sec0text2" rotation="0 150 0"></a-plane>
+</a-entity>
+
+<a-entity id="pillar1" rotation="0 -20 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.55968 3.701 14.94375" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 1; width: 3.35" scale="1.25 1.25 1.25" id="sec1panelNum" rotation="0 150 0">Panel 1</a-plane>
+<a-image role="img" aria-label="Figure 1. Zero Trust Architecture Benefits. Reference 1. It is secure like a lock, makes people happy, and shields people from danger." src="media/figures/Zero Trust Architecture Benefits.png" position="-7.39306 3.1178 15.53318" rotation="0 154 0" scale="2.12 0.61 1" id="sec3image"></a-image>
+<a-plane position="-6.93589 2.61204 15.75056" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: What is ZTA?; width: 3" scale="1.25 1.25 1.25" id="sec1text1" rotation="0 156 0">What is zero trust architecture?</a-plane>
+<a-plane position="-7.47979 2.2582 15.49589" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: Zero Trust Architecture (ZTA) is a modern cybersecurity strategy, summed up by the phrase &quot;never trust, always verify&quot; [2].; width: 1.9; wrapCount: 35" scale="1.25 1.25 1.25" id="sec1text2" rotation="0 154.5 0">Zero Trust Architecture is a modern cybersecurity strategy, summed up by the phrase never trust, always verify. Reference 1.</a-plane>
+<a-plane position="-9.5601 2.7262 14.3005" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: ZTA has nothing to do with building physical buildings. It is not about creating a secret fortress or underground bunker. It is a strategy for building secure technology that everyone can benefit from--employees, companies, anybody with an online account. The only people who do not benefit are hackers and people who would like to misuse their digital privileges.; width: 1.9; wrapCount: 32.5" scale="1.25 1.25 1.25" id="sec1text3" rotation="0 146 0">Zero trust architecture has nothing to do with building physical buildings. It is not about creating a secret fortress or underground bunker. It is a strategy for building secure technology that everyone can benefit from, employees, companies, anybody with an online account. The only people who do not benefit are hackers and people who would like to misuse their digital privileges.</a-plane>
+</a-entity>
+
+<a-entity id="pillar2" rotation="0 -40 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.55968 3.701 14.94375" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 2; width: 3.35" scale="1.25 1.25 1.25" id="sec2panelNum" rotation="0 150 0">Panel 2</a-plane>
+<a-image role="img" aria-label="Figure 2. The Old Castle. Reference 1. Guards may be on the outside of the castle, but who is going to stop the bad actor on the inside?" src="media/figures/The Old Castle.png" position="-7.39306 3.1178 15.53318" rotation="0 154 0" scale="2.12 0.61 1" id="sec2image"></a-image>
+<a-plane position="-7.31088 2.61204 15.58361" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: Why is ZTA important?; width: 3" scale="1.25 1.25 1.25" id="sec2text1" rotation="0 155 0">Why is zero trust architecture important?</a-plane>
+<a-plane position="-7.47979 2.2582 15.49589" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: The old way of doing cybersecurity is no longer enough. Imagine that you are trying to build a castle with top-notch security.; width: 1.9; wrapCount: 35" scale="1.25 1.25 1.25" id="sec2text2" rotation="0 154.5 0">The old way of doing cybersecurity is no longer enough. Imagine that you are trying to build a castle with top-notch security.</a-plane>
+<a-plane position="-9.55039 2.7262 14.30705" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: At first, everything goes well. You have a moat, a drawbridge, and guards in the watchtowers. Only people with valid IDs are let in, and everyone new has to prove themselves. However, there are two major flaws with the old way of doing things. First, any person with an ID is let in, even if they stole that ID. Second, they are not watched or restricted inside the castle. If a person's job is to deliver food, they should not be able to start messing around in the swordsmith's shop. ZTA aims to address this.; width: 1.87; wrapCount: 35.5" scale="1.25 1.25 1.25" id="sec2text3" rotation="0 146 0">At first, everything goes well. You have a moat, a drawbridge, and guards in the watchtowers. Only people with valid IDs are let in, and everyone new has to prove themselves. However, there are two major flaws with the old way of doing things. First, any person with an ID is let in, even if they stole that ID. Second, they are not watched or restricted inside the castle. If a person's job is to deliver food, they should not be able to start messing around in the swordsmith's shop. Zero trust architecture aims to address this.</a-plane>
+</a-entity>
+
+<a-entity id="pillar3" rotation="0 -60 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.55968 3.701 14.94375" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 3; width: 3.35" scale="1.25 1.25 1.25" id="sec3panelNum" rotation="0 150 0">Panel 3</a-plane>
+<a-image role="img" aria-label="Figure 3. Zero Trust Architecture's Impact on Insider Threats. References 2 and 3. In one case study, zero trust architecture resulted in a 65% decrease in insider threats." src="media/figures/ZTA's Impact on Insider Threats.png" position="-7.39306 3.1178 15.53318" rotation="0 154 0" scale="2.12 0.61 1" id="sec3image"></a-image>
+<a-plane position="-7.14835 2.5152 15.6594" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: ZTA Effectiveness; width: 3" scale="1.25 1.25 1.25" id="sec3text1" rotation="0 155 0">Zero Trust Architecture Effectiveness</a-plane>
+<a-plane position="-7.47979 2.23133 15.49589" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: As shown in Figure 3, ZTA is an effective way to improve security.; width: 1.9; wrapCount: 35" scale="1.25 1.25 1.25" id="sec3text2" rotation="0 154.5 0">As shown in Figure 3, zero trust architecture is an effective way to improve security.</a-plane>
+<a-plane position="-9.55039 2.75431 14.30705" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: While it may have high initial costs and increase the overall security budget, it can easily pay for itself in terms of reduced damage. The average cost of a data breach in 2024 was $4.9 million [4]. Saving $4.9 million is worth it. ZTA could even be a business booster for small and medium enterprises (SMEs) [5]. Consumer confidence means consumer dollars.; width: 1.87; wrapCount: 31" scale="1.25 1.25 1.25" id="sec3text3" rotation="0 146 0">While it may have high initial costs and increase the overall security budget, it can easily pay for itself in terms of reduced damage. The average cost of a data breach in 2024 was $4.9 million. Reference 4. Saving $4.9 million is worth it. ZTA could even be a business booster for small and medium enterprises (SMEs). Reference 5. Consumer confidence means consumer dollars.</a-plane>
+</a-entity>
+
+<a-entity id="pillar4" rotation="0 -80 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.50905 3.72428 14.85606" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 4; width: 3.35" scale="1.25 1.25 1.25" id="sec4panelNum" rotation="0 150 0">Panel 4</a-plane>
+<a-plane position="-8.50905 3.3 14.85606" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: Zero Trust Architecture; width: 5.66" scale="1.25 1.25 1.25" id="sec4text1" rotation="0 150 0">Zero Trust Architecture Fundamentals</a-plane>
+<a-plane position="-8.55412 2.75 14.88674" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: Fundamentals; width: 8.51" scale="1.25 1.25 1.25" id="sec4text2" rotation="0 150 0"></a-plane>
+</a-entity>
+
+<a-entity id="pillar5" rotation="0 -100 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.55968 3.701 14.94375" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 5; width: 3.35" scale="1.25 1.25 1.25" id="sec5panelNum" rotation="0 150 0">Panel 5</a-plane>
+<a-image role="img" aria-label="Figure 4. Protect That Data! Reference 1. The government labels information with confidential, secret, and top secret, so why should organizations do anything different?" src="media/figures/Protect That Data!.png" position="-7.39306 3.05903 15.53318" rotation="0 154 0" scale="2 0.6 1" id="sec3image"></a-image>
+<a-plane position="-8.18924 2.5152 15.17402" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; font: monoid; height: 1.72; side: double; value: ZTA & Data; width: 3" scale="1.25 1.25 1.25" id="sec5text1" rotation="0 155 0">Zero Trust Architecture and Data</a-plane>
+<a-plane position="-7.55428 2.23133 15.46036" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: Keeping sensitive information confidential is important.; width: 1.92; wrapCount: 33" scale="1.25 1.25 1.25" id="sec5text2" rotation="0 154.5 0">Keeping sensitive information confidential is important.</a-plane>
+<a-plane position="-9.54988 2.74384 14.30629" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: One of the best ways to do this is to specify what information each person is allowed to access. Data should be classified and protected accordingly, preferably with the help of AI [6]. People should only have access to the information they need, and their access should be regularly reevaluated to prevent &quot;privilege creep&quot; (i.e., accumulating unnecessary privileges over time) [7].; width: 1.9; wrapCount: 33.5" scale="1.25 1.25 1.25" id="sec5text3" rotation="0 146 0">One of the best ways to do this is to specify what information each person is allowed to access. Data should be classified and protected accordingly, preferably with the help of AI. Reference 5. People should only have access to the information they need, and their access should be regularly reevaluated to prevent privilege creep (that is, accumulating unnecessary privileges over time). Reference 6.</a-plane>
+</a-entity>
+
+<a-entity id="pillar6" rotation="0 -120 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.55968 3.701 14.94375" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 6; width: 3.35" scale="1.25 1.25 1.25" id="sec6panelNum" rotation="0 150 0">Panel 6</a-plane>
+<a-image role="img" aria-label="Figure 5. Identity Controls. Reference 1. It is important to control a user's access to resources by first verifying who they are and then determining whether their access has expired, never was there in the first place, or is indeed there." src="media/figures/Identity Controls.png" position="-7.39306 3.14154 15.53318" rotation="0 154 0" scale="2 0.6 1" id="sec6image"></a-image>
+<a-plane position="-8.18924 2.62487 15.17402" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; font: monoid; height: 1.72; side: double; value: ZTA & Identity; width: 3" scale="1.25 1.25 1.25" id="sec6text1" rotation="0 155 0">Zero Trust Architecture and Identity</a-plane>
+<a-plane position="-7.43461 2.23133 15.51744" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: ZTA has a lot to do with making sure a cybercriminal cannot just hop on an account, pretend to be someone, and take it for a joy ride.; width: 1.68; wrapCount: 32" scale="1.25 1.25 1.25" id="sec6text2" rotation="0 154.5 0">Zero trust architecture has a lot to do with making sure a cybercriminal cannot just hop on an account, pretend to be someone, and take it for a joy ride.</a-plane>
+<a-plane position="-9.54989 2.73297 14.3063" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: Passwords are too easy to steal. Ideally, multifactor authentication (MFA), an organization-wide single sign-on (SSO) system, and machine learning (ML) should be used to strengthen Identity and Access Management (IAM) [6]. Users should be automatically signed out after a certain amount of time [6]. Also, users should only be able to access certain resources for an amount of time before they have to get permission again [6]. IAM is not all there is to ZTA, but it plays an important role.; width: 1.8; wrapCount: 34" scale="1.25 1.25 1.25" id="sec6text3" rotation="0 146 0">Passwords are too easy to steal. Ideally, multifactor authentication (MFA), an organization-wide single sign-on (SSO) system, and machine learning (ML) should be used to strengthen Identity and Access Management. Reference 6. Users should be automatically signed out after a certain amount of time. Reference 6. Also, users should only be able to access certain resources for an amount of time before they have to get permission again. Reference 6. Identity and Access Management is not all there is to zero trust architecture, but it plays an important role.</a-plane>
+</a-entity>
+
+<a-entity id="pillar7" rotation="0 -140 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.55968 3.701 14.94375" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 7; width: 3.35" scale="1.25 1.25 1.25" id="sec7panelNum" rotation="0 150 0">Panel 7</a-plane>
+<a-image role="img" aria-label="Figure 6. Network Segmentation. Reference 1. When a network is seperated into smaller ones, cybercriminals are less able to compromise large amounts of computers." src="media/figures/Network Segmentation.png" position="-7.39306 3.02335 15.53318" rotation="0 154 0" scale="2 0.6 1" id="sec7image"></a-image>
+<a-plane position="-8.18924 2.56438 15.17402" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; font: monoid; height: 1.72; side: double; value: ZTA & Networks; width: 3" scale="1.25 1.25 1.25" id="sec7text1" rotation="0 155 0">Zero Trust Architecture and Networks</a-plane>
+<a-plane position="-7.43461 2.23133 15.51744" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: Networks (systems connecting computers) should be just as regulated as everything else.; width: 1.7; wrapCount: 30" scale="1.25 1.25 1.25" id="sec7text2" rotation="0 154.5 0">Networks (systems connecting computers) should be just as regulated as everything else.</a-plane>
+<a-plane position="-9.54989 2.75226 14.3063" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: They should be &quot;segmented&quot; into many separate networks to reduce the freedom of cybercriminals, who would very much like to gain access to an entire organization network all at once, not just a small segment [8]. Network communications should always be encrypted and filtered [6].; width: 1.95; wrapCount: 30" scale="1.25 1.25 1.25" id="sec7text3" rotation="0 146 0">They should be segmented into many separate networks to reduce the freedom of cybercriminals, who would very much like to gain access to an entire organization network all at once, not just a small segment. Reference 8. Network communications should always be encrypted and filtered. Reference 6.</a-plane>
+</a-entity>
+
+<a-entity id="pillar8" rotation="0 -160 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.55968 3.701 14.94375" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 8; width: 3.35" scale="1.25 1.25 1.25" id="sec8panelNum" rotation="0 150 0">Panel 8</a-plane>
+<a-image role="img" aria-label="Figure 7. Only Secure, Managed Devices Allowed. Reference 1. If a device lacks either of those criteria, it should not be allowed to connect to the normal company network." src="media/figures/Only Secure, Managed Devices Allowed.png" position="-7.39306 3.05903 15.53318" rotation="0 154 0" scale="2 0.6 1" id="sec8image"></a-image>
+<a-plane position="-8.12935 2.56443 15.19684" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; font: monoid; height: 1.72; side: double; value: ZTA & User Devices/Apps; width: 2.9" scale="1.25 1.25 1.25" id="sec8text1" rotation="0 155 0">Zero Trust Architecture and User Devices and Apps</a-plane>
+<a-plane position="-7.43461 2.22771 15.51744" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: Finally, ZTA makes sure that devices connecting to a company network are secure.; width: 1.7; wrapCount: 30" scale="1.25 1.25 1.25" id="sec8text2" rotation="0 154.5 0">Finally, zero trust architecture makes sure that devices connecting to a company network are secure.</a-plane>
+<a-plane position="-9.54989 2.69106 14.3063" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: This means controlling which apps employees can and cannot install on their assigned devices (to avoid malware) [9]. This also means software that the IT team can use to remotely monitor every assigned device, ideally software that uses machine learning to detect unusual activity [6]. If a device is not authorized and monitored, it should not be allowed to connect to the normal network [6]. Such devices should connect to a completely separate network [6].; width: 1.8; wrapCount: 36" scale="1.25 1.25 1.25" id="sec8text3" rotation="0 146 0">This means controlling which apps employees can and cannot install on their assigned devices (to avoid malware). Reference 9. This also means software that the IT team can use to remotely monitor every assigned device, ideally software that uses machine learning to detect unusual activity. Reference 6. If a device is not authorized and monitored, it should not be allowed to connect to the normal network. Reference 6. Such devices should connect to a completely separate network. Reference 6.</a-plane>
+</a-entity>
+
+<a-entity id="pillar9" rotation="0 -180 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.55968 3.64524 14.94375" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 9; width: 3.35" scale="1.25 1.25 1.25" id="sec9panelNum" rotation="0 150 0">Panel 9</a-plane>
+<a-plane position="-8.50905 3.1553 14.85606" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: Challenge Questions; width: 5.66" scale="1.25 1.25 1.25" id="sec9text1" rotation="0 150 0">Challege Questions</a-plane>
+</a-entity>
+
+<a-entity id="pillar10" rotation="0 -200 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.50905 3.83044 14.85606" mixin="panelText" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 10; width: 3.35" id="sec10panelNum" rotation="0 150 0">Panel 10</a-plane>
+
+<a-image role="img" aria-label="Figure 8. Position Change. Reference 1. Sometimes people decide it is time to do something different." src="media/figures/Position Change.png" position="-7.15 3.12595 15.65" rotation="0 155 0" scale="1.4 0.71 1" id="sec11image"></a-image>
+
+<a-plane position="-6.97109 2.56236 15.73488" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: Question #1; width: 3" scale="1.25 1.25 1.25" id="sec10text1" rotation="0 156 0">Quetion Number 1</a-plane>
+<a-plane position="-7.39443 2.23903 15.54248" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: An employee changed positions and is now working on a different company project. What is the best course of action?; width: 1.55; wrapCount: 34" scale="1.25 1.25 1.25" id="sec10text2" rotation="0 155 0"></a-plane>
+
+<a-entity tabindex="0" aria-label="An employee changed positions and is now working on a different company project. What is the best course of action?" role="radiogroup" id="sec10ansPanel">
+
+<a-plane tabindex="0" aria-label="Require them to reset their work account password." role="radio" onkeypress="if (event.key === ' ' || event.key === 'Spacebar') {selectAnswer(1)}" onfocus="if(this.ariaChecked == 'false') {outline(0.5, 'sec10out1', 'sec10outIn1');}" aria-checked="false" onblur="if(this.ariaChecked == 'false') {outline(0, 'sec10out1', 'sec10outIn1');}" onclick="selectAnswer(1);" position="-9.28973 3.35538 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: a. Require them to reset their work account password.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" class="answer" id="sec10ans1" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30949 3.35538 14.46183" material="shader: flat; color: #004cff;" geometry="height: 0.4; width: 2" id="sec10out1" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30659 3.35538 14.45718" material="shader: flat; color: #e5f9ff;" geometry="height: 0.33; width: 1.93" id="sec10outIn1" rotation="0 148 0" data-clickable sec10answer1></a-plane>
+
+<a-plane tabindex="0" aria-label="Let them back up their previous project documents with their secure storage service." role="radio" onkeypress="if (event.key === ' ' || event.key === 'Spacebar') {selectAnswer(2)}" onfocus="if(this.ariaChecked == 'false') {outline(0.5, 'sec10out2', 'sec10outIn2');}" aria-checked="false" onblur="if(this.ariaChecked == 'false') {outline(0, 'sec10out2', 'sec10outIn2');}" onclick="selectAnswer(2);" position="-9.28973 2.90518 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: b. Let them back up their previous project documents with their secure storage service.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" class="answer" id="sec10ans2" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30949 2.898 14.46183" material="shader: flat; color: #004cff" geometry="height: 0.5; width: 2" id="sec10out2" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30659 2.898 14.45718" material="shader: flat; color: #e5f9ff" geometry="height: 0.43; width: 1.93" id="sec10outIn2" rotation="0 148 0" data-clickable sec10answer2></a-plane>
+
+<a-plane tabindex="0" aria-label="Remove their access to the previous project." role="radio" onkeypress="if (event.key === ' ' || event.key === 'Spacebar') {selectAnswer(3)}" onfocus="if(this.ariaChecked == 'false') {outline(0.5, 'sec10out3', 'sec10outIn3');}" aria-checked="false" onblur="if(this.ariaChecked == 'false') {outline(0, 'sec10out3', 'sec10outIn3');}" onclick="selectAnswer(3);" position="-9.29 2.48253 14.43" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: c. Remove their access to the previous project.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" class="answer" id="sec10ans3" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30949 2.48306 14.46183" material="shader: flat; color: #004cff" geometry="height: 0.4; width: 2" id="sec10out3" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30659 2.483 14.45718" material="shader: flat; color: #e5f9ff" geometry="height: 0.33; width: 1.93" id="sec10outIn3" rotation="0 148 0" data-clickable sec10answer3></a-plane>
+
+<a-plane tabindex="0" aria-disabled="true" aria-label="Check" role="button" position="-9.29 2.12711 14.43" material="shader: flat; color: #6B6B6B" geometry="height: 0.2; width: 1.5" text="align: center; color: #ffffff; height: 1.72; side: double; value: Check; width: 1.67; wrapCount: 27" scale="1.25 1.25 1.25" id="sec10check" rotation="0 148 0" data-clickable onkeypress="if (event.key === 'Enter') {check('sec10')}" sec10check></a-plane>
+</a-entity>
+
+<a-plane aria-live="polite" position="-9.28973 2.99427 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Feedback: Incorrect. While there is nothing wrong with changing passwords, that is not the biggest concern here.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" id="sec10feedback1" rotation="0 148 0"></a-plane>
+
+<a-plane aria-live="polite" position="-9.28973 3.02799 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Feedback: Incorrect. Letting an employee back up documents they do not need could increase the risk of data exfiltration. It does not matter how secure their storage service is. They could give documents full of important company secrets to others.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" id="sec10feedback2" rotation="0 148 0"></a-plane>
+
+<a-plane aria-live="polite" position="-9.28973 3.0016 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Feedback: Correct! This implements least privilege access and prevents &quot;privilege creep&quot; [7].; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" id="sec10feedback3" rotation="0 148 0"></a-plane>
+
+<a-plane tabindex="0" aria-label="Reset" role="button" position="-9.29801 2.12711 14.44283" material="shader: flat; color: #335bd1" geometry="height: 0.2; width: 1.5" text="align: center; color: #ffffff; height: 1.72; side: double; value: Reset; width: 1.67; wrapCount: 27" scale="1.25 1.25 1.25" id="sec10reset" rotation="0 148 0" onkeypress="if(event.key === 'Enter') {hideFeedback('sec10')}" data-clickable sec10reset></a-plane>
+</a-entity>
+
+<a-entity id="pillar11" rotation="0 -220 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.50905 3.83044 14.85606" mixin="panelText" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 11; width: 3.35" id="sec11panelNum" rotation="0 150 0">Panel 11</a-plane>
+
+<a-image role="img" aria-label="Figure 9. Assume Breach. If there is a breach are you going to be saying 'Uh-oh. What to do? What to do??'" src="media/figures/Assume Breach.png" position="-7.15 3.12595 15.65" rotation="0 155 0" scale="1.4 0.71 1" id="sec11image"></a-image>
+
+<a-plane position="-6.97436 2.5686 15.73323" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: Question #2; width: 3" scale="1.25 1.25 1.25" id="sec11text1" rotation="0 156 0">Question Number 2</a-plane>
+
+<a-plane position="-7.27957 2.23632 15.60552" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Assume a cybercriminal has obtained access to an account. What is the best way to slow them down?; width: 1.36; wrapCount: 30" scale="1.25 1.25 1.25" id="sec11text2" rotation="0 155 0"></a-plane>
+
+<a-entity tabindex="0" aria-label="Assume a cybercriminal has obtained access to an account. What is the best way to slow them down?" role="radiogroup" id="sec11ansPanel">
+<a-plane tabindex="0" aria-label="Use machine learning to detect suspicious activity." role="radio" onkeypress="if (event.key === ' ' || event.key === 'Spacebar') {selectAnswer(4)}" onfocus="if(this.ariaChecked == 'false') {outline(0.5, 'sec11out1', 'sec11outIn1');}" aria-checked="false" onblur="if(this.ariaChecked == 'false') {outline(0, 'sec11out1', 'sec11outIn1');}" onclick="selectAnswer(4);" position="-9.28973 3.35538 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: a. Use machine learning to detect suspicious activity.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" class="answer" id="sec11ans1" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30949 3.35538 14.46183" material="shader: flat; color: #004cff;" geometry="height: 0.4; width: 2" id="sec11out1" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30659 3.35538 14.45718" material="shader: flat; color: #e5f9ff;" geometry="height: 0.33; width: 1.93" id="sec11outIn1" rotation="0 148 0" data-clickable sec11answer1></a-plane>
+
+<a-plane tabindex="0" aria-label="Require everyone to change their passwords periodically." role="radio" onkeypress="if (event.key === ' ' || event.key === 'Spacebar') {selectAnswer(5)}" onfocus="if(this.ariaChecked == 'false') {outline(0.5, 'sec11out2', 'sec11outIn2');}" aria-checked="false" onblur="if(this.ariaChecked == 'false') {outline(0, 'sec11out2', 'sec11outIn2');}" onclick="selectAnswer(5);" position="-9.28973 2.94084 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: b. Require everyone to change their passwords periodically.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" class="answer" id="sec11ans2" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30949 2.93397 14.46183" material="shader: flat; color: #004cff" geometry="height: 0.4; width: 2" id="sec11out2" rotation="0 148 0" opacity="0.99"></a-plane>
+<a-plane position="-9.30659 2.93397 14.45718" material="shader: flat; color: #e5f9ff" geometry="height: 0.33; width: 1.93" id="sec11outIn2" rotation="0 148 0" data-clickable sec11answer2></a-plane>
+
+<a-plane tabindex="0" aria-label="Require everyone to use a VPN to protect their online privacy." role="radio" onkeypress="if (event.key === ' ' || event.key === 'Spacebar') {selectAnswer(6)}" onfocus="if(this.ariaChecked == 'false') {outline(0.5, 'sec11out3', 'sec11outIn3');}" aria-checked="true" onblur="if(this.ariaChecked == 'false') {outline(0, 'sec11out3', 'sec11outIn3');}" onclick="selectAnswer(6);" position="-9.29 2.54446 14.43" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: c. Require everyone to use a VPN to protect their online privacy.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" class="answer" id="sec11ans3" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30949 2.538 14.46183" material="shader: flat; color: #004cff" geometry="height: 0.4; width: 2" id="sec11out3" rotation="0 148 0" opacity="0.99"></a-plane>
+<a-plane position="-9.30659 2.538 14.45718" material="shader: flat; color: #e5f9ff" geometry="height: 0.33; width: 1.93" id="sec11outIn3" rotation="0 148 0" data-clickable sec11answer3></a-plane>
+
+<a-plane tabindex="0" aria-disabled="true" aria-label="Check" role="button" position="-9.29 2.12711 14.43" material="shader: flat; color: #6B6B6B" geometry="height: 0.2; width: 1.5" text="align: center; color: #ffffff; height: 1.72; side: double; value: Check; width: 1.67; wrapCount: 27" scale="1.25 1.25 1.25" id="sec11check" rotation="0 148 0" data-clickable onkeypress="if (event.key === 'Enter') {check('sec11')}" sec11check></a-plane>
+</a-entity>
+
+<a-plane aria-live="polite" position="-9.28973 2.99427 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Feedback: Correct! Even if a cybercriminal has access to the system, their freedom will be severely limited.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" id="sec11feedback1" rotation="0 148 0"></a-plane>
+
+<a-plane aria-live="polite" position="-9.28973 3.02799 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Feedback: Incorrect. Forcing people to change their passwords periodically can encourage them to create weak passwords that are hard to remember [10]. Additionally, this will do nothing to slow down the cybercriminal if they legitimately have an account but decide to misuse it (e.g., if they are a disgruntled employee).; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" id="sec11feedback2" rotation="0 148 0"></a-plane>
+
+<a-plane aria-live="polite" position="-9.28973 3.0016 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Feedback: Incorrect. A VPN is aimed at protecting internet connection privacy, not internet content privacy. If the cybercriminal has access to an account, they can access all the content and privileges associated with it (e.g., if it is an email account, emails, contacts, etc.).; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" id="sec11feedback3" rotation="0 148 0"></a-plane>
+
+<a-plane tabindex="0" aria-label="Reset" role="button" position="-9.29801 2.12711 14.44283" material="shader: flat; color: #335bd1" geometry="height: 0.2; width: 1.5" text="align: center; color: #ffffff; height: 1.72; side: double; value: Reset; width: 1.67; wrapCount: 27" scale="1.25 1.25 1.25" id="sec11reset" rotation="0 148 0" onkeypress="if(event.key === 'Enter') {hideFeedback('sec11')}" data-clickable sec11reset></a-plane>
+</a-entity>
+
+<a-entity id="pillar12" rotation="0 -240 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.50905 3.83044 14.85606" mixin="panelText" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 12; width: 3.35" id="sec12panelNum" rotation="0 150 0">Panel 12</a-plane>
+
+<a-image role="img" aria-label="Figure 10. Final Stretch Encouragement. Reference 11. Almost there. Keep up that great work!" src="media/figures/Final Stretch Encouragement.png" position="-7.15 3.10004 15.65" rotation="0 155 0" scale="1.4 0.77 1" id="sec12image"></a-image>
+<a-plane position="-7.03731 2.46516 15.7054" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: Question #3; width: 3" scale="1.25 1.25 1.25" id="sec12text1" rotation="0 156 0">Question Number 3</a-plane>
+<a-plane position="-7.34409 2.19735 15.57544" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Where does ZTA start?; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" id="sec12text2" rotation="0 155 0"></a-plane>
+
+
+<a-entity tabindex="0" aria-label="Where does zero trust architecture start?" role="radiogroup" id="sec12ansPanel">
+<a-plane tabindex="0" aria-label="Never trust, always verify." role="radio" onkeypress="if (event.key === ' ' || event.key === 'Spacebar') {selectAnswer(7)}" onfocus="if(this.ariaChecked == 'false') {outline(0.5, 'sec12out1', 'sec12outIn1');}" aria-checked="false" onblur="if(this.ariaChecked == 'false') {outline(0, 'sec12out1', 'sec12outIn1');}" onclick="selectAnswer(4);" position="-9.28973 3.35538 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: a. &quot;Never trust, always verify.&quot;; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" class="answer" id="sec12ans1" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30949 3.35538 14.46183" material="shader: flat; color: #004cff;" geometry="height: 0.4; width: 2" id="sec12out1" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30659 3.35538 14.45718" material="shader: flat; color: #e5f9ff;" geometry="height: 0.33; width: 1.93" id="sec12outIn1" rotation="0 148 0" data-clickable sec12answer1></a-plane>
+
+<a-plane tabindex="0" aria-label="Trust, but verify." role="radio" onkeypress="if (event.key === ' ' || event.key === 'Spacebar') {selectAnswer(8)}" onfocus="if(this.ariaChecked == 'false') {outline(0.5, 'sec12out2', 'sec12outIn2');}" aria-checked="false" onblur="if(this.ariaChecked == 'false') {outline(0, 'sec12out2', 'sec12outIn2');}" onclick="selectAnswer(5);" position="-9.28973 2.94084 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: b. &quot;Trust, but verify.&quot;; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" class="answer" id="sec12ans2" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30949 2.93397 14.46183" material="shader: flat; color: #004cff" geometry="height: 0.4; width: 2" id="sec12out2" rotation="0 148 0" opacity="0.99"></a-plane>
+<a-plane position="-9.30659 2.93397 14.45718" material="shader: flat; color: #e5f9ff" geometry="height: 0.33; width: 1.93" id="sec12outIn2" rotation="0 148 0" data-clickable sec12answer2></a-plane>
+
+<a-plane tabindex="0" aria-label="Always trust, never verify." role="radio" onkeypress="if (event.key === ' ' || event.key === 'Spacebar') {selectAnswer(9)}" onfocus="if(this.ariaChecked == 'false') {outline(0.5, 'sec12out3', 'sec12outIn3');}" aria-checked="true" onblur="if(this.ariaChecked == 'false') {outline(0, 'sec12out3', 'sec12outIn3');}" onclick="selectAnswer(6);" position="-9.29 2.54446 14.43" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: c. &quot;Always trust, never verify.&quot;; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" class="answer" id="sec12ans3" rotation="0 148 0"></a-plane>
+<a-plane position="-9.30949 2.538 14.46183" material="shader: flat; color: #004cff" geometry="height: 0.4; width: 2" id="sec12out3" rotation="0 148 0" opacity="0.99"></a-plane>
+<a-plane position="-9.30659 2.538 14.45718" material="shader: flat; color: #e5f9ff" geometry="height: 0.33; width: 1.93" id="sec12outIn3" rotation="0 148 0" data-clickable sec12answer3></a-plane>
+
+<a-plane tabindex="0" aria-disabled="true" aria-label="Check" role="button" position="-9.29 2.12711 14.43" material="shader: flat; color: #6B6B6B" geometry="height: 0.2; width: 1.5" text="align: center; color: #ffffff; height: 1.72; side: double; value: Check; width: 1.67; wrapCount: 27" scale="1.25 1.25 1.25" data-clickable id="sec12check" rotation="0 148 0" onkeypress="if (event.key === 'Enter') {check('sec12')}" sec12check></a-plane>
+</a-entity>
+
+<a-plane aria-live="polite" position="-9.28973 2.99427 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Feedback: Correct! This is ZTA. People get what they need, and cybercriminals do not.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" id="sec12feedback1" rotation="0 148 0"></a-plane>
+
+<a-plane aria-live="polite" position="-9.28973 3.02799 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Feedback: Incorrect. This describes the old model of cybersecurity [12]. If all a cybercriminal needs to succeed is some logon credentials, they will succeed.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" id="sec12feedback2" rotation="0 148 0"></a-plane>
+
+<a-plane aria-live="polite" position="-9.28973 3.0016 14.4302" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="color: #000000; height: 1.72; side: double; value: Feedback: Incorrect. This is the exact opposite of ZTA. Always trusting everything all the time is dangerous.; width: 1.36; wrapCount: 27" scale="1.25 1.25 1.25" id="sec12feedback3" rotation="0 148 0"></a-plane>
+
+<a-plane tabindex="0" aria-label="Reset" role="button" position="-9.29801 2.12711 14.44283" material="shader: flat; color: #335bd1" geometry="height: 0.2; width: 1.5" text="align: center; color: #ffffff; height: 1.72; side: double; value: Reset; width: 1.67; wrapCount: 27" scale="1.25 1.25 1.25" id="sec12reset" rotation="0 148 0" onkeypress="if(event.key === 'Enter') {hideFeedback('sec12')}" data-clickable sec12reset></a-plane>
+</a-entity>
+
+<a-entity id="pillar13" rotation="0 -260 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.55968 3.64524 14.94375" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 13; width: 3.35" scale="1.25 1.25 1.25" id="sec13panelNum" rotation="0 150 0">Panel 13</a-plane>
+<a-plane position="-8.50905 3.1553 14.85606" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 1.5" text="align: center; color: #000000; font: monoid; height: 1.72; side: double; value: References; width: 6" scale="1.25 1.25 1.25" id="sec13text1" rotation="0 150 0">References</a-plane>
+</a-entity>
+
+<a-entity id="pillar14" rotation="0 -280 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.50905 3.83044 14.85606" mixin="panelText" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 14; width: 3.35" id="sec14panelNum" rotation="0 150 0">Panel 14</a-plane>
+
+<a-plane position="-8.56717 3.4 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: &quot;Stock Images,&quot; Microsoft. [Online]. Available: https://cdn.hubblecontent.osi.office.net/m365content/ux/m365contentpicker/index.html. [Accessed Mar. 21, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec14text1" rotation="0 150 0">Reference 1. "Stock Images," Microsoft. [Online]. Available: https://cdn.hubblecontent.osi.office.net/m365content/ux/m365contentpicker/index.html. [Accessed March 21, 2025].</a-plane>
+
+<a-plane position="-8.56717 3.2 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: S. Ahmadi, &quot;Zero Trust Architecture in Cloud Networks: Application, Challenges and Future Opportunities,&quot; J. Eng. Res. Rep., vol. 26, no. 2, pp. 215–228, Feb. 13, 2024. [Online]. Available: https://journaljerr.com/index.php/JERR/article/view/1083. [Accessed Feb. 27, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec14text2" rotation="0 150 0">Reference 2. S. Ahmadi, "Zero Trust Architecture in Cloud Networks: Application, Challenges and Future Opportunities," Journal of Engineering Research and Reports, volume 26, number 2, pages 215 through 228, February 13, 2024. [Online]. Available: https://journaljerr.com/index.php/JERR/article/view/1083. [Accessed February 27, 2025].</a-plane>
+
+<a-plane position="-8.56717 3 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: Clker-Free-Vector-Images, &quot;Download Sign, Caution, Warning. Royalty-Free Vector Graphic - Pixabay,&quot; Pixabay. [Online]. Available: https://pixabay.com/vectors/sign-caution-warning-danger-safety-304093/. [Accessed Mar. 1, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec14text3" rotation="0 150 0">Reference 3. Clker-Free-Vector-Images, "Download Sign, Caution, Warning. Royalty-Free Vector Graphic - Pixabay," Pixabay. [Online]. Available: https://pixabay.com/vectors/sign-caution-warning-danger-safety-304093/. [Accessed March 1, 2025].</a-plane>
+
+<a-plane position="-8.56717 2.8 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: &quot;Cost of a Data Breach Report 2024,&quot; International Business Machines. July 2024. [Online]. Available: https://www.ibm.com/reports/data-breach. [Accessed Mar. 11, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec14text4" rotation="0 150 0">Reference 4. "Cost of a Data Breach Report 2024," International Business Machines. July 2024. [Online]. Available: https://www.ibm.com/reports/data-breach. [Accessed March 11, 2025].</a-plane>
+
+<a-plane position="-8.56717 2.6 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: K. Lake, &quot;The Benefits of Zero Trust Security to Small and Medium Enterprises,&quot; Jumpcloud. Feb. 22, 2022. [Online]. Available: https://jumpcloud.com/blog/zero-trust-benefits-smes. [Accessed Mar. 12, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec14text5" rotation="0 150 0">Reference 5. K. Lake, "The Benefits of Zero Trust Security to Small and Medium Enterprises," Jumpcloud. February 22, 2022. [Online]. Available: https://jumpcloud.com/blog/zero-trust-benefits-smes. [Accessed March 12, 2025].</a-plane>
+
+<a-plane position="-8.56717 2.4 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: M. Qureshi, &quot;Zero Trust Architecture--Myth or Reality?&quot; Information Systems Audit and Control Association. Nov. 4, 2020. [Online]. Available: https://www.isaca.org/resources/isaca-journal/issues/2020/volume-6/zero-trust-architecture-myth-or-reality. [Accessed Mar. 11, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec14text6" rotation="0 150 0">Reference 6. M. Qureshi, "Zero Trust Architecture - Myth or Reality?" Information Systems Audit and Control Association. November 4, 2020. [Online]. Available: https://www.isaca.org/resources/isaca-journal/issues/2020/volume-6/zero-trust-architecture-myth-or-reality. [Accessed March 11, 2025].</a-plane>
+
+<a-plane position="-8.56717 2.2 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: A. Trevino and A. Cutler, Ed., &quot;What Is Privilege Creep?&quot; Keeper Security. Mar. 12, 2024. [Online]. Available: https://www.keepersecurity.com/blog/2024/03/12/what-is-privilege-creep/. [Accessed Mar. 4, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec14text7" rotation="0 150 0">Reference 7. A. Trevino and A. Cutler, Editor, "What Is Privilege Creep?" Keeper Security. March 12, 2024. [Online]. Available: https://www.keepersecurity.com/blog/2024/03/12/what-is-privilege-creep/. [Accessed March 4, 2025].</a-plane>
+
+<a-plane position="-6.59447 3.44 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [1]; width: 0.08; wrapCount: 2" scale="1.25 1.25 1.25" id="sec14text8" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 3.24 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [2]; width: 0.08; wrapCount: 2" scale="1.25 1.25 1.25" id="sec14text9" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 3.04 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [3]; width: 0.08; wrapCount: 2" scale="1.25 1.25 1.25" id="sec14text10" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 2.84 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [4]; width: 0.08; wrapCount: 2" scale="1.25 1.25 1.25" id="sec14text11" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 2.64 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [5]; width: 0.08; wrapCount: 2" scale="1.25 1.25 1.25" id="sec14text12" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 2.44 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [6]; width: 0.08; wrapCount: 2" scale="1.25 1.25 1.25" id="sec14text13" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 2.24 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [7]; width: 0.08; wrapCount: 2" scale="1.25 1.25 1.25" id="sec14text14" rotation="0 150 0"></a-plane>
+</a-entity>
+
+<a-entity id="pillar15" rotation="0 -300 0">
+<a-box mixin="pillars"></a-box>
+<a-plane position="-8.50905 3.83044 14.85606" mixin="panelText" text="align: center; color: #636363; font: monoid; height: 1.72; side: double; value: Panel 15; width: 3.35" id="sec15panelNum" rotation="0 150 0"></a-plane>
+
+<a-plane position="-8.56717 3.4 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: &quot;Zero Trust security | What is a Zero Trust network?&quot; Cloudflare. [Online]. Available: https://www.cloudflare.com/learning/security/glossary/what-is-zero-trust/. [Accessed Mar. 20, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec15text1" rotation="0 150 0">Reference 8. "Zero Trust security | What is a Zero Trust network?" Cloudflare. [Online]. Available: https://www.cloudflare.com/learning/security/glossary/what-is-zero-trust/. [Accessed March 20, 2025].</a-plane>
+
+<a-plane position="-8.56717 3.2 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: &quot;Zero Trust Strategy & Architecture | Microsoft Security,&quot; Microsoft. [Online]. Available: https://www.microsoft.com/en-us/security/business/zero-trust. [Accessed Mar. 20, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec15text2" rotation="0 150 0">Reference 9. "Zero Trust Strategy & Architecture | Microsoft Security," Microsoft. [Online]. Available: https://www.microsoft.com/en-us/security/business/zero-trust. [Accessed March 20, 2025].</a-plane>
+
+<a-plane position="-8.56717 3 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: K. Ako-Adjei, K. Vice, and J. Mathew, et al. &quot;Password policy recommendations for Microsoft 365 passwords,&quot; Microsoft. May 28, 2024. [Online]. Available: https://learn.microsoft.com/en-us/microsoft-365/admin/misc/password-policy-recommendations. [Accessed March 21, 2025].; width: 3.52; wrapCount: 113.33" scale="1.25 1.25 1.25" id="sec15text3" rotation="0 150 0">Reference 10. K. Ako-Adjei, K. Vice, and J. Mathew, et al. "Password policy recommendations for Microsoft 365 passwords," Microsoft. May 28, 2024. [Online]. Available: https://learn.microsoft.com/en-us/microsoft-365/admin/misc/password-policy-recommendations. [Accessed March 21, 2025].</a-plane>
+
+<a-plane position="-8.56717 2.8 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: Clker-Free-Vector-Images, &quot;Download Checkered Flag, Finish Line, Grand Prix. Royalty-Free Vector Graphic - Pixabay,&quot; Pixabay. [Online]. Available: https://pixabay.com/vectors/checkered-flag-finish-line-309862/. [Accessed Mar. 18, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec15text4" rotation="0 150 0">Reference 11. Clker-Free-Vector-Images, "Download Checkered Flag, Finish Line, Grand Prix. Royalty-Free Vector Graphic - Pixabay," Pixabay. [Online]. Available: https://pixabay.com/vectors/checkered-flag-finish-line-309862/. [Accessed March 18, 2025].</a-plane>
+
+<a-plane position="-8.56717 2.6 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: H. Holton, &quot;Zero Trust 101: It’s Time to Ditch 'Trust but Verify',&quot; GigaOm, June 7, 2024. [Online]. Available: https://gigaom.com/2024/06/07/zero-trust-101-its-time-to-ditch-trust-but-verify/. [Accessed Mar. 20, 2025].; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec15text5" rotation="0 150 0">Reference 12. H. Holton, "Zero Trust 101: It’s Time to Ditch 'Trust but Verify'," GigaOm, June 7, 2024. [Online]. Available: https://gigaom.com/2024/06/07/zero-trust-101-its-time-to-ditch-trust-but-verify/. [Accessed March 20, 2025].</a-plane>
+
+<a-plane position="-8.56717 2.4 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: SvrMx, &quot;Solar Panel,&quot; Fab. [Online]. Available: https://www.fab.com/listings/8af67582-8361-47df-a056-e133eb06f1a1. [Accessed: Mar. 4, 2025]. CC BY-SA 4.0; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec15text6" rotation="0 150 0">Reference 13.  SvrMx, "Solar Panel," Fab. [Online]. Available: https://www.fab.com/listings/8af67582-8361-47df-a056-e133eb06f1a1. [Accessed: March 4, 2025]. Creative Commons By Share Alike 4.0</a-plane>
+
+<a-plane position="-8.56717 2.2 14.78498" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: T. S, &quot;Planetary Spheremaps,&quot; Space Spheremaps. [Online]. Available: https://www.spacespheremaps.com/wp-content/uploads/artificial_planet_close.png. [Accessed: Feb. 26, 2025]. CC BY 4.0; width: 3.53; wrapCount: 110" scale="1.25 1.25 1.25" id="sec15text7" rotation="0 150 0">Reference 14. T. S, "Planetary Spheremaps," Space Spheremaps. [Online]. Available: https://www.spacespheremaps.com/wp-content/uploads/artificial_planet_close.png. [Accessed: February 26, 2025]. Creative Commons By 4.0</a-plane>
+
+<a-plane position="-6.59447 3.44 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [8]; width: 0.08; wrapCount: 2" scale="1.25 1.25 1.25" id="sec15text8" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 3.24 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [9]; width: 0.08; wrapCount: 2" scale="1.25 1.25 1.25" id="sec15text9" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 3.04 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [10]; width: 0.14; wrapCount: 4" scale="1.25 1.25 1.25" id="sec15text10" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 2.84 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [11]; width: 0.14; wrapCount: 4" scale="1.25 1.25 1.25" id="sec15text11" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 2.64 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [12]; width: 0.14; wrapCount: 4" scale="1.25 1.25 1.25" id="sec15text12" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 2.44 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [13]; width: 0.14; wrapCount: 4" scale="1.25 1.25 1.25" id="sec15text13" rotation="0 150 0"></a-plane>
+
+<a-plane position="-6.59447 2.24 15.92392" material="shader: sdf; transparent: true" geometry="height: 1.5; width: 2" text="color: #000000; height: 1.72; side: double; value: [14]; width: 0.14; wrapCount: 4" scale="1.25 1.25 1.25" id="sec15text14" rotation="0 150 0"></a-plane>
+</a-entity>
+
+<a-entity id="pillar16" rotation="0 40 0">
+<a-box mixin="pillars"></a-box>
+</a-entity>
+
+<a-cylinder position="0 0.9 0" radius="0.5" height="1.5" material="shader: flat; side: double; color: #685f50;" geometry="openEnded: true; segmentsHeight: 1; segmentsRadial: 150; thetaLength: 320" scale="34 1.25 34" id="lowWall" rotation="0 20 0"></a-cylinder>
+
+<a-ring geometry="radiusInner: 17; radiusOuter: 17.25; segmentsPhi: 1; segmentsTheta: 150; thetaLength: 320" position="0 1.835 0" rotation="270 -70 0" material="shader: flat; color: #685f50" id="lowWallTop"></a-ring>
+
+<a-cylinder position="0 2.932 0" radius="0.5" height="1.5" material="shader: flat; side: double; color: #e5f9ff;" geometry="openEnded: true; segmentsHeight: 1; segmentsRadial: 150; thetaLength: 320" scale="34.5 1.75 34.5" id="infoScreen" rotation="0 20 0"></a-cylinder>
+
+<a-cylinder position="0 3.042 0" radius="0.5" height="1.5" material="shader: flat; side: double; color: #ffffff; src: media/backgrounds/panel0back.png" geometry="openEnded: true; segmentsHeight: 1; segmentsRadial: 150; thetaLength: 18" scale="34.49 1.65 34.49" id="panel0back" rotation="0 -38.77 0"></a-cylinder>
+
+<a-cylinder position="0 3.042 0" radius="0.5" height="1.5" material="shader: flat; side: double; color: #ffffff; src: media/backgrounds/panel4back.png" geometry="openEnded: true; segmentsHeight: 1; segmentsRadial: 150; thetaLength: 18" scale="34.49 1.65 34.49" id="panel4back" rotation="0 -118.77 0"></a-cylinder>
+
+<a-cylinder position="0 3.042 0" radius="0.5" height="1.5" material="shader: flat; side: double; color: #ffffff; src: media/backgrounds/panel9back.png" geometry="openEnded: true; segmentsHeight: 1; segmentsRadial: 150; thetaLength: 18" scale="34.49 1.65 34.49" id="panel9back" rotation="0 -218.77 0"></a-cylinder>
+
+<a-cylinder position="0 3.042 0" radius="0.5" height="1.5" material="shader: flat; side: double; color: #ffffff; src: media/backgrounds/panel13back.png" geometry="openEnded: true; segmentsHeight: 1; segmentsRadial: 150; thetaLength: 18" scale="34.49 1.65 34.49" id="panel13back" rotation="0 61.23 0"></a-cylinder>
+
+</a-entity>
+
+<a-entity id="solarPanels" class="hiddenAccessibleText">
+<a-box material="color: #949494; metalness: 0.5" position="-29 4.55836 0.68751" scale="23 0.5 0.5" id="solarPanelAxel1"></a-box>
+
+<a-box material="color: #949494; metalness: 0.5" position="29 4.55836 0.68751" scale="23 0.5 0.5" id="solarPanelAxel2"></a-box>
+
+<a-plane position="-36 4.5 1.11" material="shader: phong; src: #solarPanel" scale="10 12 1" rotation="-10 0 0" id="solarPanel1"></a-plane>
+
+<a-box material="color: #949494; metalness: 0.5" position="-36 4.5 1" scale="10 12 0.2" rotation="-10 0 0" id="solarBack1"></a-box>
+
+<a-plane position="-36 4.5 0.4" material="opacity: 0; shader: phong" scale="10 12 1" rotation="0 180 0" id="solarCite1" text="align: center; color: #000000; side: double; value: Solar Panel. Adapted from [13], CC BY-SA 4.0">Image. Solar Panel. Adapted from reference 13, Creative Commons By-Share Alike 4.0</a-plane>
+
+<a-plane position="-25 4.5 1.11" material="src: #solarPanel; shader: phong;" scale="10 12 1" rotation="-10 0 0" id="solarPanel2"></a-plane>
+
+<a-box material="color: #949494; metalness: 0.5" position="-25 4.5 1" scale="10 12 0.2" rotation="-10 0 0" id="solarBack2"></a-box>
+
+<a-plane position="-25 4.5 0.4" material="opacity: 0; shader: phong" scale="10 12 1" rotation="0 180 0" id="solarCite2" text="align: center; color: #000000; side: double; value: Solar Panel. Adapted from [13], CC BY-SA 4.0"></a-plane>
+
+<a-plane position="25 4.5 1.11" material="src: #solarPanel; shader: phong;" scale="10 12 1" rotation="-10 0 0" id="solarPanel3"></a-plane>
+
+<a-box material="color: #949494; metalness: 0.5" position="25 4.5 1" scale="10 12 0.2" rotation="-10 0 0" id="solarBack3"></a-box>
+
+<a-plane position="25 4.5 0.4" material="opacity: 0; shader: phong" scale="10 12 1" rotation="0 180 0" id="solarCite3" text="align: center; color: #000000; side: double; value: Solar Panel. Adapted from [13], CC BY-SA 4.0"></a-plane>
+
+<a-plane position="36 4.5 1.11" material="src: #solarPanel; shader: phong;" scale="10 12 1" rotation="-10 0 0" id="solarPanel4"></a-plane>
+
+<a-box material="color: #949494; metalness: 0.5" position="36 4.5 1" scale="10 12 0.2" id="solarBack4" rotation="-10 0 0"></a-box>
+
+<a-plane position="36 4.5 0.4" material="opacity: 0; shader: phong" scale="10 12 1" rotation="0 180 0" id="solarCite4" text="align: center; color: #000000; side: double; value: Solar Panel. Adapted from [13], CC BY-SA 4.0"></a-plane>
+</a-entity>
+
+<a-entity id="sphereCitations">
+<a-plane mixin="sphereCitation">Image. Artificial Planet Close. From reference 14, Creative Commons By 4.0</a-plane>
+
+<a-entity rotation="0 45 0">
+<a-plane mixin="sphereCitation"></a-plane>
+</a-entity>
+
+<a-entity rotation="0 90 0">
+<a-plane mixin="sphereCitation"></a-plane>
+</a-entity>
+
+<a-entity rotation="0 135 0">
+<a-plane mixin="sphereCitation"></a-plane>
+</a-entity>
+
+<a-entity rotation="0 180 0">
+<a-plane mixin="sphereCitation"></a-plane>
+</a-entity>
+
+<a-entity rotation="0 225 0">
+<a-plane mixin="sphereCitation"></a-plane>
+</a-entity>
+
+<a-entity rotation="0 270 0">
+<a-plane mixin="sphereCitation"></a-plane>
+</a-entity>
+
+<a-entity rotation="0 315 0">
+<a-plane mixin="sphereCitation"></a-plane>
+</a-entity>
+</a-entity>
+    </a-scene>
+    <script>
+        outline(0, 'sec10out1', 'sec10outIn1');
+        outline(0, 'sec10out2', 'sec10outIn2');
+        outline(0, 'sec10out3', 'sec10outIn3');
+        hideFeedback("sec10");
+        outline(0, 'sec11out1', 'sec11outIn1');
+        outline(0, 'sec11out2', 'sec11outIn2');
+        outline(0, 'sec11out3', 'sec11outIn3');
+        hideFeedback("sec11");
+        outline(0, 'sec12out1', 'sec12outIn1');
+        outline(0, 'sec12out2', 'sec12outIn2');
+        outline(0, 'sec12out3', 'sec12outIn3');
+        hideFeedback("sec12");
+    </script>
+  </body>
+</html>
