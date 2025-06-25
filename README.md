@@ -5,20 +5,7 @@
 ## Overview
 This project is the culmination of a quarter's worth of work for a technical writing class. It is 3D web experience meant to make the complicated subject of zero trust architecture engaging and understandable for a non-technical audience. This project was a learning experience and still has some flaws, but please enjoy!
 
-## How to View Online
-Try it here: [https://ford-desk.github.io/ztcenter/ztCenter.html](https://ford-desk.github.io/ztcenter/ztCenter.html)
-
-## How to View Offline
-Download the copy labeled "ztCenterSingleFile.html". All the images and scripts embedded in this file. This makes it harder to edit but bypasses the CORS restrictions that A-Frame, the 3D engine, imposes.
-
-## Unique Features
-These are some included features meant to enrich user experience:
-- Navigation buttons to easily move between information panels
-- Zoom control buttons
-- Interactive challenge questions
-
-## Contributing
-While this project is dormant, any code suggestions are welcomed.
+Try it at https://ford-desk.github.io/ztcenter/ztCenter.html
 
 ## License
 This program relies on a framework for building browser based 3D, AR and VR experiences developed by A-Frame authors. Their framework is under an [MIT License](LICENSE-MIT).
